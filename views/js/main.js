@@ -498,14 +498,33 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
+
+// debounce scroll event
+var lastScrollY = 0;
+var ticking = false;
+
+requestTick = function() {
+    if (!ticking) {
+        window.requestAnimationFrame(updatePositions);
+        ticking = true;
+      }
+}
+
+function activeScroll() {
+  lastScrollY = window.scrollY;
+  requestTick();
+}
+
+// Change position of pizzas on scroll
 function updatePositions() {
+  ticking = false;
   frame++;
   window.performance.mark("mark_start_frame");
-
-  var items = document.querySelectorAll('.mover');
+  var currentScrollY = lastScrollY;
+  var items = document.getElementsByClassName("mover");
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    items[i].style.transform = 'translateX(' + 100 * phase + 'px)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -518,8 +537,8 @@ function updatePositions() {
   }
 }
 
-// runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+window.addEventListener('scroll', activeScroll, false);
+
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
