@@ -424,7 +424,7 @@ var resizePizzas = function(size) {
    // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldWidth = elem.offsetWidth;
-    var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
+    var windowWidth = document.getElementById("randomPizzas").offsetWidth;
     var oldSize = oldWidth / windowWidth;
 
     // Changes the slider value to a percent width
@@ -469,7 +469,7 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 40; i++) {
+for (var i = 2; i < 100; i++) {
   var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
@@ -522,11 +522,12 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
   var currentScrollY = lastScrollY;
   var items = document.getElementsByClassName("mover");
-  var phase;
+  var phase = [];
+  var phaseCalc = document.body.scrollTop / 1250;
   for (var i = 0; i < items.length; i++) {
-    phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    // items[i].style.transform = 'translateX(' + 500 * phase + 'px)';
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    phase.unshift(Math.sin(phaseCalc + (i % 5)));
+    // items[i].style.transform = 'translateX(' + 500 * phase[0] + 'px)';
+    items[i].style.left = items[i].basicLeft + 100 * phase[0] + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -555,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    document.getElementById("movingPizzas1").appendChild(elem);
   }
   updatePositions();
 });

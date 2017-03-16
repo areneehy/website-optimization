@@ -7,14 +7,15 @@ add media queries to unblock css for print stylesheet
 inline critical css
 todo: caching
 todo: minify js, css
+optimize images and prioritize visible content
 
 
 _in main.js_
 simplified resizing calculations for pizzas
-replace querySelectorAll with the faster getElementsByClassName
+replace universal selectors
 debounced scroll event
 applied translateX instead of left for animation
-
+remove variable creation and DOM manipulation from loops where possible to avoid reflow
 
 ## Website Performance Optimization portfolio project
 
